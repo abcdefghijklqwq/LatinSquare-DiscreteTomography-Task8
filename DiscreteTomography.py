@@ -37,7 +37,7 @@ def phi_2(m, n, x):
     for j in range(n):
         for I in range(2**m):
             bin_rep = bin(I)[2:]
-            bin_rep = append_zeroes(bin_rep, n - len(bin_rep))
+            bin_rep = append_zeroes(bin_rep, m - len(bin_rep))
             if bin_rep.count('1') == x[j] + 1:
                 clause = Cnf()
                 for i, char in enumerate(bin_rep):
@@ -48,7 +48,7 @@ def phi_2(m, n, x):
     for j in range(n):
         for I in range(2**m):
             bin_rep = bin(I)[2:]
-            bin_rep = append_zeroes(bin_rep, n - len(bin_rep))
+            bin_rep = append_zeroes(bin_rep, m - len(bin_rep))
             if bin_rep.count('1') == m - x[j] + 1:
                 clause = Cnf()
                 for i, char in enumerate(bin_rep):
