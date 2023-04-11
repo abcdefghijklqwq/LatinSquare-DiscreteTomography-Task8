@@ -55,16 +55,12 @@ vector<vector<int>> constructM_(vector<int>& Y, vector<int>& X, vector<int>& X_)
         for (int j = 0; j < n; j++)
             M_[i][j] = (Y[i]-1 >= j ? 1 : 0);
 
-    queue<pair<int,int>> available_cells;
-
-    for (int j = 0; j < n; j++)
+    for (int j = n-1; j > -1; j--)
         if (X[j] > X_[j])
-            for (int cnt = X[j] - X_[j]; cnt > 0; cnt--)
-                M_[available_cells.front().first][j] = 1, available_cells.pop();
-        else if (X[j] < X_[j])
-            for (int i = m-1, cnt = X_[j] - X[j]; i > -1 && cnt > 0; i--)
-                if (M_[i][j] == 1)
-                    available_cells.push({i, j}), M_[i][j] = 0, cnt--;
+            for (int k = j-1, cnt = X[j] - X_[j]; k > -1 && cnt > 0; k--)
+                for (int i = m-1; i > -1 && cnt > 0; i--)
+                    if (M_[i][k] == 1 && M_[i][j] == 0)
+                        M_[i][j] = 1, M_[i][k] = 0, cnt--, X_[k]--;
     return M_;
 } 
 
@@ -85,7 +81,6 @@ vector<vector<int>> constructM(vector<vector<int>> M_, vector<int>& Y, vector<in
         tY[i] = Y[orderY[i]];
     for (int i = 0; i < n; i++)
         tX[i] = X[orderX[i]];
-
     return M1;
 }
 
@@ -103,6 +98,26 @@ void preserve_order(vector<int>& Y, vector<int>& X, vector<int>& orderY, vector<
         orderY[Y_[i].second] = i;
     for (int i = 0; i < (int)X_.size(); i++)
         orderX[X_[i].second] = i;
+}
+
+bool isSolution(vector<vector<int>> M, vector<int> Y, vector<int> X) {
+    int m = (int)Y.size(), n = (int)X.size();
+    for (int i = 0; i < m; i++) {
+        int cnt = 0;
+        for (int j = 0; j < n; j++)
+            cnt += (M[i][j]);
+        if (cnt != Y[i])
+            return false;
+    }
+
+    for (int j = 0; j < n; j++) {
+        int cnt = 0;
+        for (int i = 0; i < m; i++)
+            cnt += (M[i][j]);
+        if (cnt != X[j])
+            return false;
+    }
+    return true;
 }
 
 int main() {
